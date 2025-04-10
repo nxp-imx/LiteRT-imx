@@ -28,12 +28,12 @@ import numpy as np
 
 # pylint: disable=g-import-not-at-top
 if not os.path.splitext(__file__)[0].endswith(
-    os.path.join("tflite_runtime", "visualize")):
+    os.path.join("ai_edge_litert", "visualize")):
   # This file is part of tensorflow package.
   from tflite.python import schema_py_generated as schema_fb
 else:
-  # This file is part of tflite_runtime package.
-  from tflite_runtime import schema_py_generated as schema_fb
+  # This file is part of ai_edge_litert package.
+  from ai_edge_litert import schema_py_generated as schema_fb
 
 # A CSS description for making the visualizer
 _CSS = """

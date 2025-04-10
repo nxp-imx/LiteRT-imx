@@ -19,7 +19,7 @@ NUMPY_VERSION ?= 1.23.2
 
 # Values: rpi, aarch64, native
 TENSORFLOW_TARGET ?= native
-WHEEL_PROJECT_NAME ?= tflite_runtime
+WHEEL_PROJECT_NAME ?= ai_edge_litert
 # Values: according to https://www.python.org/dev/peps/pep-0440/
 VERSION_SUFFIX ?=
 

@@ -14,9 +14,9 @@ experiment using the model provided with the example linked below.)
 
 To quickly start executing TensorFlow Lite models with Python, you can install
 just the TensorFlow Lite interpreter, instead of all TensorFlow packages. We
-call this simplified Python package `tflite_runtime`.
+call this simplified Python package `ai_edge_litert`.
 
-The `tflite_runtime` package is a fraction the size of the full `tensorflow`
+The `ai_edge_litert` package is a fraction the size of the full `tensorflow`
 package and includes the bare minimum code required to run inferences with
 TensorFlow Lite—primarily the
 [`Interpreter`](https://www.tensorflow.org/api_docs/python/tf/lite/Interpreter)
@@ -28,7 +28,7 @@ Note: If you need access to other Python APIs, such as the
 [full TensorFlow package](https://www.tensorflow.org/install/).
 For example, the [Select TF ops]
 (https://www.tensorflow.org/lite/guide/ops_select) are not included in the
-`tflite_runtime` package. If your models have any dependencies to the Select TF
+`ai_edge_litert` package. If your models have any dependencies to the Select TF
 ops, you need to use the full TensorFlow package instead.
 
 ## Install TensorFlow Lite for Python
@@ -64,10 +64,10 @@ macOS. For these platforms, you should use the
 [full TensorFlow package](https://www.tensorflow.org/install/), or
 [build the tflite-runtime package from source](build_cmake_pip.md).
 
-## Run an inference using tflite_runtime
+## Run an inference using ai_edge_litert
 
 Instead of importing `Interpreter` from the `tensorflow` module, you now need to
-import it from `tflite_runtime`.
+import it from `ai_edge_litert`.
 
 For example, after you install the package above, copy and run the
 [`label_image.py`](
@@ -82,7 +82,7 @@ import tensorflow as tf
 So it instead reads:
 
 ```python
-import tflite_runtime.interpreter as tflite
+import ai_edge_litert.interpreter as tflite
 ```
 
 And then change this line:
@@ -114,5 +114,5 @@ models.
 * To convert other TensorFlow models to TensorFlow Lite, read about the
   [TensorFlow Lite Converter](../models/convert/).
 
-* If you want to build `tflite_runtime` wheel, read
+* If you want to build `ai_edge_litert` wheel, read
   [Build TensorFlow Lite Python Wheel Package](build_cmake_pip.md)

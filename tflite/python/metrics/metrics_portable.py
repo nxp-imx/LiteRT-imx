@@ -18,12 +18,12 @@ from typing import Optional, Text
 
 # pylint: disable=g-import-not-at-top
 if not os.path.splitext(__file__)[0].endswith(
-    os.path.join('tflite_runtime', 'metrics_portable')):
+    os.path.join('ai_edge_litert', 'metrics_portable')):
   # This file is part of tensorflow package.
   from tflite.python.metrics import metrics_interface  # type: ignore
 else:
-  # This file is part of tflite_runtime package.
-  from tflite_runtime import metrics_interface  # type: ignore
+  # This file is part of ai_edge_litert package.
+  from ai_edge_litert import metrics_interface  # type: ignore
 # pylint: enable=g-import-not-at-top
 
 

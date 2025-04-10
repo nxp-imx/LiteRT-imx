@@ -135,11 +135,11 @@ CI_DOCKER_EXTRA_PARAMS="-e CUSTOM_BAZEL_FLAGS=--define=tflite_pip_with_flex=true
 
 ## Usage
 
-Note, unlike tensorflow this will be installed to a `tflite_runtime` namespace.
+Note, unlike tensorflow this will be installed to a `ai_edge_litert` namespace.
 You can then use the Tensorflow Lite interpreter as.
 
 ```python
-from tflite_runtime.interpreter import Interpreter
+from ai_edge_litert.interpreter import Interpreter
 interpreter = Interpreter(model_path="foo.tflite")
 ```
 

@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-export PYBUILD_NAME=tflite_runtime
+export PYBUILD_NAME=ai_edge_litert
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 

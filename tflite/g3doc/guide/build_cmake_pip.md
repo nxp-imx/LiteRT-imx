@@ -1,6 +1,6 @@
 # Build TensorFlow Lite Python Wheel Package
 
-This page describes how to build the TensorFlow Lite `tflite_runtime` Python
+This page describes how to build the TensorFlow Lite `ai_edge_litert` Python
 library for x86_64 and various ARM devices.
 
 The following instructions have been tested on Ubuntu 16.04.3 64-bit PC (AMD64)

@@ -18,14 +18,14 @@ import os
 
 # pylint: disable=g-import-not-at-top
 if not os.path.splitext(__file__)[0].endswith(
-    os.path.join("tflite_runtime", "analyzer")):
+    os.path.join("ai_edge_litert", "analyzer")):
   # This file is part of tensorflow package.
   from tensorflow.compiler.mlir.lite.python import wrap_converter
   from tflite.python.analyzer_wrapper import _pywrap_analyzer_wrapper as _analyzer_wrapper
   from tensorflow.python.util.tf_export import tf_export as _tf_export
 else:
-  # This file is part of tflite_runtime package.
-  from tflite_runtime import _pywrap_analyzer_wrapper as _analyzer_wrapper
+  # This file is part of ai_edge_litert package.
+  from ai_edge_litert import _pywrap_analyzer_wrapper as _analyzer_wrapper
 
   def _tf_export(*x, **kwargs):
     del x, kwargs
