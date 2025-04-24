@@ -20,6 +20,8 @@ populate_source_vars("${TFLITE_SOURCE_DIR}/experimental/genai"
 )
 
 add_library(pywrap_genai_ops SHARED EXCLUDE_FROM_ALL
+  ${LITERT_GENAI_OPS_SRCS}
+)
 
 # To remove "lib" prefix.
 set_target_properties(pywrap_genai_ops PROPERTIES PREFIX "")
@@ -27,5 +29,12 @@ set_target_properties(pywrap_genai_ops PROPERTIES PREFIX "")
 include_directories(pywrap_genai_ops
   PUBLIC
   ${TENSORFLOW_SOURCE_DIR}
+  ${PYTHON_INCLUDE_DIRS}
+)
+
+target_link_libraries(pywrap_genai_ops
+  PRIVATE
+  tensorflow-lite
+  ${CMAKE_DL_LIBS}
 )
 

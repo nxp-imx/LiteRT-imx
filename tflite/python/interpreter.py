@@ -33,6 +33,7 @@ else:
   # This file is part of ai_edge_litert package.
   from ai_edge_litert import _pywrap_tensorflow_interpreter_wrapper as _interpreter_wrapper
   from ai_edge_litert import metrics_portable as metrics
+  from ai_edge_litert import pywrap_genai_ops
 
   def _tf_export(*x, **kwargs):
     del x, kwargs
