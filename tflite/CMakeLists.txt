@@ -39,15 +39,16 @@ cmake_policy(SET CMP0028 NEW)
 cmake_policy(SET CMP0042 NEW)
 project(tensorflow-lite C CXX)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(TENSORFLOW_SOURCE_DIR "" CACHE PATH
+set(LITERT_SOURCE_DIR "" CACHE PATH
   "Directory that contains the TensorFlow project"
 )
-if(NOT TENSORFLOW_SOURCE_DIR)
-  get_filename_component(TENSORFLOW_SOURCE_DIR
-    "${CMAKE_CURRENT_LIST_DIR}/../../"
+if(NOT LITERT_SOURCE_DIR)
+  get_filename_component(LITERT_SOURCE_DIR
+    "${CMAKE_CURRENT_LIST_DIR}/.."
     ABSOLUTE
   )
 endif()
+set(TENSORFLOW_SOURCE_DIR "${LITERT_SOURCE_DIR}/third_party/tensorflow")
 set(TF_SOURCE_DIR "${TENSORFLOW_SOURCE_DIR}/tensorflow")
 set(TSL_SOURCE_DIR "${TENSORFLOW_SOURCE_DIR}/third_party/xla/third_party/tsl")
 set(XLA_SOURCE_DIR "${TENSORFLOW_SOURCE_DIR}/third_party/xla/")
@@ -180,6 +181,7 @@ find_package(ruy REQUIRED)
 include_directories(
   ${TSL_SOURCE_DIR}
   ${XLA_SOURCE_DIR}
+  ${CMAKE_CURRENT_LIST_DIR}/..
 )
 # Download necessary dependencies.
 if(TFLITE_ENABLE_XNNPACK)
@@ -528,9 +530,9 @@ if(TFLITE_ENABLE_XNNPACK)
     FILTER ".*(_test|_tester)\\.(cc|h)"
   )
   add_custom_command(
-    OUTPUT "${PROJECT_BINARY_DIR}/tensorflow/lite/delegates/xnnpack/weight_cache_schema_generated.h"
+    OUTPUT "${PROJECT_BINARY_DIR}/tflite/delegates/xnnpack/weight_cache_schema_generated.h"
     COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -c
-      -o "${PROJECT_BINARY_DIR}/tensorflow/lite/delegates/xnnpack/"
+      -o "${PROJECT_BINARY_DIR}/tflite/delegates/xnnpack/"
       --gen-mutable --gen-object-api
       "${TFLITE_SOURCE_DIR}/delegates/xnnpack/weight_cache_schema.fbs"
     DEPENDS "${FLATC_TARGET}" "${TFLITE_SOURCE_DIR}/delegates/xnnpack/weight_cache_schema.fbs"
@@ -538,7 +540,7 @@ if(TFLITE_ENABLE_XNNPACK)
 
   add_library(xnnpack-delegate STATIC
     "${TFLITE_DELEGATES_XNNPACK_SRCS}"
-    "${PROJECT_BINARY_DIR}/tensorflow/lite/delegates/xnnpack/weight_cache_schema_generated.h"
+    "${PROJECT_BINARY_DIR}/tflite/delegates/xnnpack/weight_cache_schema_generated.h"
   )
   target_include_directories(xnnpack-delegate
     PUBLIC $<BUILD_INTERFACE:${TENSORFLOW_SOURCE_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -553,6 +555,12 @@ if(TFLITE_ENABLE_XNNPACK)
     )
 
   list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DTFLITE_KERNEL_USE_XNNPACK")
+  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DTFLITE_BUILD_WITH_XNNPACK_DELEGATE")
+  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_ENABLE_QS8")
+  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_ENABLE_QU8")
+  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_USE_LATEST_OPS")
+  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_ENABLE_SUBGRAPH_RESHAPING")
+
   target_compile_options(xnnpack-delegate
     PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
     PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
@@ -562,11 +570,6 @@ if(TFLITE_ENABLE_XNNPACK)
     xnnpack-delegate
     XNNPACK
   )
-  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DTFLITE_BUILD_WITH_XNNPACK_DELEGATE")
-  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_ENABLE_QS8")
-  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_ENABLE_QU8")
-  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_USE_LATEST_OPS")
-  list(APPEND TFLITE_TARGET_PUBLIC_OPTIONS "-DXNNPACK_DELEGATE_ENABLE_SUBGRAPH_RESHAPING")
 endif()
 if(TFLITE_ENABLE_EXTERNAL_DELEGATE)
   populate_tflite_source_vars("delegates/external"
@@ -802,7 +805,7 @@ endif()
 
 # Add the generated headers directory. Required for maintaining the
 # tensorflow/lite directory structure for generated headers.
-set(TFLITE_GENERATED_HEADERS_DIR ${CMAKE_BINARY_DIR}/tensorflow/lite)
+set(TFLITE_GENERATED_HEADERS_DIR ${CMAKE_BINARY_DIR}/tflite)
 
 # Add the profiling proto directory.
 add_subdirectory(${TFLITE_SOURCE_DIR}/profiling/proto)
@@ -815,6 +818,7 @@ add_subdirectory(${TFLITE_SOURCE_DIR}/tools/benchmark)
 
 # The label_image example.
 add_subdirectory(${TFLITE_SOURCE_DIR}/examples/label_image)
+add_subdirectory(${TFLITE_SOURCE_DIR}/experimental/genai)
 
 # Python interpreter wrapper.
 add_library(_pywrap_tensorflow_interpreter_wrapper SHARED EXCLUDE_FROM_ALL
