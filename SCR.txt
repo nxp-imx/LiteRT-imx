@@ -1,0 +1,25 @@
+NXP Software Content Register
+
+---------------------------------------------
+Package:                     litert-imx
+Outgoing License:            Apache-2.0
+License File:                LICENSE
+Package Category:            MachineLearning
+Type of Content:             source
+Description and comments:    Open-source high-performance runtime for on-device AI
+Release Location:            https://github.com/nxp-imx/litert-imx
+Origin:                      NXP (Apache-2.0)
+                             tensorflow 1.2.0 (Apache-2.0) - https://github.com/google-ai-edge/LiteRT
+
+
+----------------------------------------------------
+third_party
+----------------------------------------------------
+Component:                   tensorflow
+Outgoing License:            Apache-2.0
+License File:                LICENSE
+Package Category:            MachineLearning
+Type of Content:             source
+Description and comments:    TensorFlow is an end-to-end open source platform for machine learning.
+Origin:                      tensorflow v2.19.0 (Apache-2.0) - https://github.com/tensorflow/tensorflow
+File location:               third_party/tensorflow/
