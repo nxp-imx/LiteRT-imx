@@ -1,0 +1,63 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2026-01-26T02:17:22Z",
+    "creators": [
+      "Organization: NXP"
+    ],
+    "licenseListVersion": "3.26"
+  },
+  "name": "litert-imx-LF_6.18.2_1.0.0",
+  "dataLicense": "CC0-1.0",
+  "documentNamespace": "https://nxp.com/spdx/e283225d-380b-45bf-9827-c91269b3691b",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-package-e283225d-380b-45bf-9827-c91269b3691b",
+      "name": "litert-imx",
+      "versionInfo": "LF_6.18.2_1.0.0",
+      "licenseConcluded": "(Apache-2.0)",
+      "licenseDeclared": "(Apache-2.0)",
+      "downloadLocation": "https://github.com/nxp-imx/litert-imx -b lf-6.18.2-1.0.0",
+      "originator": "Organization: NXP",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-46ee3237-d0ac-4cfa-8ddb-01ee5e4623ce",
+      "name": "google-ai-edge/LiteRT",
+      "versionInfo": "v1.2.0",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: google-ai-edge",
+      "supplier": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "OTHER",
+          "referenceLocator": "ce0761e1-7c1f-4282-aa00-abd51db358f7",
+          "referenceType": "BlackDuck-ComponentOrigin"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:github/google-ai-edge/litert@v1.2.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-package-e283225d-380b-45bf-9827-c91269b3691b"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-e283225d-380b-45bf-9827-c91269b3691b",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-46ee3237-d0ac-4cfa-8ddb-01ee5e4623ce"
+    }
+  ]
+}
