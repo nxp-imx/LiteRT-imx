@@ -61,7 +61,9 @@ set(LITERT_PTHREADPOOL_INCLUDE_DIR "${TFLITE_BUILD_DIR}/pthreadpool-source/inclu
 if(APPLE)
   target_sources(litert_runtime PRIVATE metal_info.cc)
 endif()
-target_sources(litert_runtime PRIVATE open_cl_memory.cc open_cl_sync.cc)
+if(LITERT_ENABLE_GPU)
+  target_sources(litert_runtime PRIVATE open_cl_memory.cc open_cl_sync.cc)
+endif()
 
 # Link Apple frameworks for Metal and OpenGL interop
 if(APPLE)

@@ -66,6 +66,12 @@ target_include_directories(litert_wrapper_utils
     ${PYBIND11_INCLUDE_DIR}
 )
 
+target_link_libraries(litert_wrapper_utils
+  PUBLIC
+    absl::strings
+    absl::span
+)
+
 # ============================================================================
 # Compiled Model Wrapper
 # ============================================================================

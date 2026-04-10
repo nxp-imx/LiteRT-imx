@@ -62,7 +62,7 @@ if(NOT EXISTS "${_tflite_schema_dir}/schema.fbs")
 endif()
 
 set(FLATC_EXECUTABLE "")
-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+if(CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_CROSSCOMPILING)
   if(TFLITE_HOST_TOOLS_DIR AND EXISTS "${TFLITE_HOST_TOOLS_DIR}/flatc")
     set(FLATC_EXECUTABLE "${TFLITE_HOST_TOOLS_DIR}/flatc")
   elseif(TFLITE_BUILD_DIR AND EXISTS "${TFLITE_BUILD_DIR}/host_flatc/_deps/flatbuffers-build/flatc")
