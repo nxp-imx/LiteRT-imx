@@ -79,6 +79,7 @@ endif()
 option(LITERT_BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(LITERT_BUILD_TOOLS "Build LiteRT tools" ON)
 option(LITERT_BUILD_TESTS "Build LiteRT tests" OFF)
+option(LITERT_BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 option(LITERT_AUTO_BUILD_TFLITE "Automatically build TFLite if not found" ON)
 option(LITERT_ENABLE_GPU "Enable GPU acceleration support" ON)
 option(LITERT_ENABLE_NPU "Enable NPU acceleration support" ON)
@@ -86,6 +87,7 @@ option(LITERT_DISABLE_KLEIDIAI "Disable KleidiAI delegate when bundling host TFL
 
 set(LITERT_HOST_C_COMPILER "" CACHE FILEPATH "Host C compiler used for helper host-side tools (e.g. FlatBuffers flatc)")
 set(LITERT_HOST_CXX_COMPILER "" CACHE FILEPATH "Host C++ compiler used for helper host-side tools (e.g. FlatBuffers flatc)")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-changes-meaning")
 
 set(LITERT_GENERATED_INCLUDE_DIR "${CMAKE_BINARY_DIR}/include")
 set(LITERT_BUILD_COMMON_GENERATED_DIR "${LITERT_GENERATED_INCLUDE_DIR}/litert/build_common")
@@ -204,7 +206,7 @@ if(NOT EXISTS "${TFLITE_BUILD_DIR}/libtensorflow-lite.a")
         execute_process(
             COMMAND ${CMAKE_COMMAND} "${TFLITE_SOURCE_DIR}"
                 -DTFLITE_ENABLE_XNNPACK=ON
-                -DTFLITE_ENABLE_GPU=ON
+                -DTFLITE_ENABLE_GPU=${LITERT_ENABLE_GPU}
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
                 ${_tflite_extra_args}
             WORKING_DIRECTORY "${TFLITE_BUILD_DIR}"
@@ -409,5 +411,8 @@ add_subdirectory(compiler)
 add_subdirectory(vendors)
 if(LITERT_BUILD_TOOLS)
   add_subdirectory(tools)
+endif()
+if(LITERT_BUILD_PYTHON_BINDINGS)
+  add_subdirectory(python/litert_wrapper)
 endif()
 

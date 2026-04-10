@@ -15,8 +15,13 @@
 """Vendor backends for LiteRt."""
 import os
 
-from litert.python.aot.vendors.mediatek import mediatek_backend as _
-from litert.python.aot.vendors.qualcomm import qualcomm_backend as _
+try:
+  from litert.python.aot.vendors.arm_ethosu import arm_backend as _
+  from litert.python.aot.vendors.mediatek import mediatek_backend as _
+  from litert.python.aot.vendors.qualcomm import qualcomm_backend as _
 
-if os.environ.get("GOOGLE_TENSOR_COMPILER_LIB") is not None:
-  from litert.python.aot.vendors.google_tensor import google_tensor_backend as _  # pylint: disable=g-import-not-at-top
+  # Google Tensor backend (requires environment variable)
+  if os.environ.get("GOOGLE_TENSOR_COMPILER_LIB") is not None:
+    from litert.python.aot.vendors.google_tensor import google_tensor_backend as _  # pylint: disable=g-import-not-at-top
+except (ImportError, ModuleNotFoundError):
+  pass

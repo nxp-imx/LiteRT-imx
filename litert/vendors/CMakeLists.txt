@@ -19,7 +19,13 @@ include(FetchContent)
 set(NEUROPILOT_HEADERS_DIR "" CACHE PATH "Path to pre-downloaded NeuroPilot headers (root containing neuron/api)")
 set(QAIRT_HEADERS_DIR "" CACHE PATH "Path to pre-downloaded QAIRT/QNN headers (root containing Qnn*.h)")
 
-if(NOT NEUROPILOT_HEADERS_DIR)
+# MediaTek NeuroPilot header download - DISABLED for ARM64 NPU build
+# To enable MediaTek dispatch, set LITERT_ENABLE_MEDIATEK=ON
+if(NOT DEFINED LITERT_ENABLE_MEDIATEK)
+  set(LITERT_ENABLE_MEDIATEK OFF CACHE BOOL "Enable MediaTek dispatch (requires NeuroPilot SDK)")
+endif()
+
+if(LITERT_ENABLE_MEDIATEK AND NOT NEUROPILOT_HEADERS_DIR)
   if(NOT NEUROPILOT_HEADERS_URL AND NOT NEUROPILOT_GIT_REPO)
     set(NEUROPILOT_HEADERS_URL "https://s3.ap-southeast-1.amazonaws.com/mediatek.neuropilot.com/57c17aa0-90b4-4871-a7b6-cdcdc678b3aa.gz")
   endif()
@@ -54,9 +60,17 @@ if(NOT NEUROPILOT_HEADERS_DIR)
     endforeach()
     message(STATUS "NeuroPilot headers at: ${NEUROPILOT_HEADERS_DIR}")
   endif()
+else()
+  message(STATUS "Skipping NeuroPilot header download: MediaTek dispatch disabled")
 endif()
 
-if(NOT QAIRT_HEADERS_DIR)
+# Qualcomm QAIRT/QNN header download - DISABLED for ARM64 NPU build
+# To enable Qualcomm dispatch, set LITERT_ENABLE_QUALCOMM=ON
+if(NOT DEFINED LITERT_ENABLE_QUALCOMM)
+  set(LITERT_ENABLE_QUALCOMM OFF CACHE BOOL "Enable Qualcomm dispatch (requires QNN SDK)")
+endif()
+
+if(LITERT_ENABLE_QUALCOMM AND NOT QAIRT_HEADERS_DIR)
   if(NOT QAIRT_HEADERS_URL AND NOT QAIRT_GIT_REPO)
     set(QAIRT_HEADERS_URL "https://storage.googleapis.com/litert/litert_qualcomm_sdk_2_37_1_release.tar.gz")
     set(QAIRT_HEADERS_SUBDIR "latest")
@@ -96,6 +110,8 @@ if(NOT QAIRT_HEADERS_DIR)
     endif()
   endforeach()
   message(STATUS "QAIRT/QNN headers at: ${QAIRT_HEADERS_DIR}")
+else()
+  message(STATUS "Skipping QAIRT/QNN header download: Qualcomm dispatch disabled")
 endif()
 
 if(NEUROPILOT_HEADERS_DIR)
@@ -229,7 +245,7 @@ function(_litert_add_dispatch_so VENDOR DIR OUTPUT_BASENAME)
 endfunction()
 
 # Google Tensor
-_litert_add_dispatch_so(GoogleTensor "google_tensor/dispatch" "GoogleTensor")
+#_litert_add_dispatch_so(GoogleTensor "google_tensor/dispatch" "GoogleTensor")
 # MediaTek
 check_include_file_cxx("neuron/api/NeuronAdapter.h" HAVE_MEDIATEK_NEURON_HDR)
 if(NEUROPILOT_HEADERS_DIR AND EXISTS "${NEUROPILOT_HEADERS_DIR}/neuron/api/NeuronAdapter.h")
@@ -258,4 +274,3 @@ if(LITERT_ENABLE_QUALCOMM)
   # Use modular CMake structure for Qualcomm
   add_subdirectory(qualcomm)
 endif()
-

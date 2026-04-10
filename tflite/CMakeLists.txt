@@ -245,6 +245,13 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang$")
   # TFLite uses deprecated methods in neon2sse which generates a huge number of
   # warnings so surpress these until they're fixed.
   list(APPEND TFLITE_TARGET_PRIVATE_OPTIONS "-Wno-deprecated-declarations")
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+  # GCC 15+ generates many deprecation warnings from Eigen library
+  list(APPEND TFLITE_TARGET_PRIVATE_OPTIONS "-Wno-deprecated-declarations")
+  # Also prevent warnings from being treated as errors
+  list(APPEND TFLITE_TARGET_PRIVATE_OPTIONS "-Wno-error=deprecated-declarations")
+  # Suppress Clang-specific attributes ignored by GCC
+  list(APPEND TFLITE_TARGET_PRIVATE_OPTIONS "-Wno-attributes")
 endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   # Use NOMINMAX to disable the min / max macros in windows.h as they break
