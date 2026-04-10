@@ -861,30 +861,157 @@ add_subdirectory(${TFLITE_SOURCE_DIR}/tools/benchmark)
 add_subdirectory(${TFLITE_SOURCE_DIR}/examples/label_image)
 
 # Python interpreter wrapper.
-add_library(_pywrap_tensorflow_interpreter_wrapper SHARED EXCLUDE_FROM_ALL
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper_pybind11.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/numpy.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_error_reporter.cc
-  ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_utils.cc
-)
+# Only build if Python paths are provided
+if(DEFINED PYTHON_INCLUDE_DIR AND DEFINED PYTHON_LIBRARY)
+  add_library(_pywrap_tensorflow_interpreter_wrapper SHARED EXCLUDE_FROM_ALL
+    ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper.cc
+    ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/interpreter_wrapper_pybind11.cc
+    ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/numpy.cc
+    ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_error_reporter.cc
+    ${TFLITE_SOURCE_DIR}/python/interpreter_wrapper/python_utils.cc
+  )
 
-# To remove "lib" prefix.
-set_target_properties(_pywrap_tensorflow_interpreter_wrapper PROPERTIES PREFIX "")
+  # To remove "lib" prefix.
+  set_target_properties(_pywrap_tensorflow_interpreter_wrapper PROPERTIES PREFIX "")
 
-target_include_directories(_pywrap_tensorflow_interpreter_wrapper
-  PUBLIC
-    ${TENSORFLOW_SOURCE_DIR}
-)
+  target_include_directories(_pywrap_tensorflow_interpreter_wrapper
+    PUBLIC
+      ${TENSORFLOW_SOURCE_DIR}
+      ${PYTHON_INCLUDE_DIR}
+  )
 
-target_link_libraries(_pywrap_tensorflow_interpreter_wrapper
-  tensorflow-lite
-  ${CMAKE_DL_LIBS}
-)
-target_compile_options(_pywrap_tensorflow_interpreter_wrapper
-  PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
-  PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
-)
+  # Add pybind11 include directory if provided
+  if(DEFINED PYBIND11_INCLUDE_DIR)
+    target_include_directories(_pywrap_tensorflow_interpreter_wrapper
+      PUBLIC
+        ${PYBIND11_INCLUDE_DIR}
+    )
+  endif()
+
+  # Add NumPy include directory if provided
+  if(DEFINED NUMPY_INCLUDE_DIR)
+    target_include_directories(_pywrap_tensorflow_interpreter_wrapper
+      PUBLIC
+        ${NUMPY_INCLUDE_DIR}
+    )
+  endif()
+
+  target_link_libraries(_pywrap_tensorflow_interpreter_wrapper
+    tensorflow-lite
+    ${CMAKE_DL_LIBS}
+  )
+  target_compile_options(_pywrap_tensorflow_interpreter_wrapper
+    PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
+    PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
+  )
+
+  message(STATUS "Python interpreter wrapper enabled")
+  message(STATUS "  PYTHON_INCLUDE_DIR: ${PYTHON_INCLUDE_DIR}")
+  if(DEFINED NUMPY_INCLUDE_DIR)
+    message(STATUS "  NUMPY_INCLUDE_DIR: ${NUMPY_INCLUDE_DIR}")
+  endif()
+
+  # ==============================================================================
+  # Additional Python wrappers (pybind11-based)
+  # ==============================================================================
+
+  # Analyzer wrapper
+  # Create stub header directory and file for tensorflow/core/public/release_version.h
+  set(STUB_INC_DIR "${CMAKE_BINARY_DIR}/tensorflow/core/public")
+  file(MAKE_DIRECTORY "${STUB_INC_DIR}")
+  file(WRITE "${STUB_INC_DIR}/release_version.h"
+"/* Stub header for LiteRT build */
+#ifndef TENSORFLOW_CORE_PUBLIC_RELEASE_VERSION_H_
+#define TENSORFLOW_CORE_PUBLIC_RELEASE_VERSION_H_
+
+// Use tflite/version.h which provides TFLITE_VERSION_STRING
+#include \"tflite/version.h\"
+
+#endif  // TENSORFLOW_CORE_PUBLIC_RELEASE_VERSION_H_
+")
+
+  add_library(_pywrap_analyzer_wrapper SHARED EXCLUDE_FROM_ALL
+    ${TFLITE_SOURCE_DIR}/python/analyzer_wrapper/analyzer_wrapper.cc
+    ${TFLITE_SOURCE_DIR}/python/analyzer_wrapper/model_analyzer.cc
+  )
+  target_include_directories(_pywrap_analyzer_wrapper
+    PUBLIC
+      ${TENSORFLOW_SOURCE_DIR}
+      ${PYTHON_INCLUDE_DIR}
+      ${CMAKE_BINARY_DIR}  # For stub tensorflow/core/public/release_version.h
+  )
+  if(DEFINED PYBIND11_INCLUDE_DIR)
+    target_include_directories(_pywrap_analyzer_wrapper PUBLIC ${PYBIND11_INCLUDE_DIR})
+  endif()
+  target_link_libraries(_pywrap_analyzer_wrapper tensorflow-lite ${CMAKE_DL_LIBS})
+  target_compile_options(_pywrap_analyzer_wrapper
+    PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
+    PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
+  )
+
+  # Modify model interface wrapper
+  add_library(_pywrap_modify_model_interface SHARED EXCLUDE_FROM_ALL
+    ${TFLITE_SOURCE_DIR}/tools/optimize/python/modify_model_interface.cc
+  )
+  target_include_directories(_pywrap_modify_model_interface
+    PUBLIC
+      ${TENSORFLOW_SOURCE_DIR}
+      ${PYTHON_INCLUDE_DIR}
+  )
+  if(DEFINED PYBIND11_INCLUDE_DIR)
+    target_include_directories(_pywrap_modify_model_interface PUBLIC ${PYBIND11_INCLUDE_DIR})
+  endif()
+  target_link_libraries(_pywrap_modify_model_interface tensorflow-lite ${CMAKE_DL_LIBS})
+  target_compile_options(_pywrap_modify_model_interface
+    PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
+    PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
+  )
+
+  # Format converter wrapper (sparsity)
+  add_library(format_converter_wrapper_pybind11 SHARED EXCLUDE_FROM_ALL
+    ${TFLITE_SOURCE_DIR}/tools/optimize/sparsity/format_converter_wrapper_pybind11.cc
+    ${TFLITE_SOURCE_DIR}/kernels/internal/utils/sparsity_format_converter.cc
+  )
+  target_include_directories(format_converter_wrapper_pybind11
+    PUBLIC
+      ${TENSORFLOW_SOURCE_DIR}
+      ${PYTHON_INCLUDE_DIR}
+  )
+  if(DEFINED PYBIND11_INCLUDE_DIR)
+    target_include_directories(format_converter_wrapper_pybind11 PUBLIC ${PYBIND11_INCLUDE_DIR})
+  endif()
+  target_link_libraries(format_converter_wrapper_pybind11 tensorflow-lite ${CMAKE_DL_LIBS})
+  target_compile_options(format_converter_wrapper_pybind11
+    PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
+    PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
+  )
+
+  # GenAI ops wrapper
+  add_library(pywrap_genai_ops SHARED EXCLUDE_FROM_ALL
+    ${TFLITE_SOURCE_DIR}/experimental/genai/genai_ops_wrapper.cc
+    ${TFLITE_SOURCE_DIR}/experimental/genai/genai_ops.cc
+    ${TFLITE_SOURCE_DIR}/experimental/genai/kvcache.cc
+    ${TFLITE_SOURCE_DIR}/experimental/genai/sdpa.cc
+    ${TFLITE_SOURCE_DIR}/experimental/genai/external_kvcache.cc
+  )
+  target_include_directories(pywrap_genai_ops
+    PUBLIC
+      ${TENSORFLOW_SOURCE_DIR}
+      ${PYTHON_INCLUDE_DIR}
+  )
+  if(DEFINED PYBIND11_INCLUDE_DIR)
+    target_include_directories(pywrap_genai_ops PUBLIC ${PYBIND11_INCLUDE_DIR})
+  endif()
+  target_link_libraries(pywrap_genai_ops tensorflow-lite ${CMAKE_DL_LIBS})
+  target_compile_options(pywrap_genai_ops
+    PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
+    PRIVATE ${TFLITE_TARGET_PRIVATE_OPTIONS}
+  )
+
+  message(STATUS "Additional Python wrappers enabled: analyzer, modify_model_interface, format_converter, genai_ops")
+else()
+  message(STATUS "Python interpreter wrapper disabled (PYTHON_INCLUDE_DIR not set)")
+endif()
 
 target_compile_options(xnnpack-delegate
   PUBLIC ${TFLITE_TARGET_PUBLIC_OPTIONS}
