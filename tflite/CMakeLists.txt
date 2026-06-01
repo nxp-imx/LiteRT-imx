@@ -999,6 +999,8 @@ if(DEFINED PYTHON_INCLUDE_DIR AND DEFINED PYTHON_LIBRARY)
       ${TENSORFLOW_SOURCE_DIR}
       ${PYTHON_INCLUDE_DIR}
   )
+  # To remove "lib" prefix.
+  set_target_properties(pywrap_genai_ops PROPERTIES PREFIX "")
   if(DEFINED PYBIND11_INCLUDE_DIR)
     target_include_directories(pywrap_genai_ops PUBLIC ${PYBIND11_INCLUDE_DIR})
   endif()

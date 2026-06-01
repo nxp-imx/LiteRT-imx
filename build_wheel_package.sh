@@ -72,7 +72,7 @@ if [ ! -f "${LIB_BUILD_DIR}/c/libLiteRt.so" ] && [ ! -f "${OUTPUT_DIR}/lib/libLi
 fi
 
 # Get version
-[ -z "${VERSION}" ] && VERSION="$(git -C "${LITERT_ROOT}" describe --tags --abbrev=0 2>/dev/null || echo v2.1.0)"
+[ -z "${VERSION}" ] && VERSION="v2.1.0"
 VERSION="${VERSION#v}+arm64"
 
 echo "Building ai_edge_litert ${VERSION}"
@@ -143,7 +143,7 @@ find "${LIB_BUILD_DIR}" "${OUTPUT_DIR}" -name "_pywrap_*.so" -exec cp {} "${PKG_
 [ -f "${TFLITE_BUILD_DIR}/_pywrap_tensorflow_interpreter_wrapper.so" ] && \
     cp "${TFLITE_BUILD_DIR}/_pywrap_tensorflow_interpreter_wrapper.so" "${PKG_DIR}/_pywrap_litert_interpreter_wrapper.so"
 for so in lib_pywrap_analyzer_wrapper.so lib_pywrap_modify_model_interface.so \
-          libformat_converter_wrapper_pybind11.so libpywrap_genai_ops.so; do
+          libformat_converter_wrapper_pybind11.so pywrap_genai_ops.so; do
     [ -f "${TFLITE_BUILD_DIR}/${so}" ] && cp "${TFLITE_BUILD_DIR}/${so}" "${PKG_DIR}/"
 done
 
