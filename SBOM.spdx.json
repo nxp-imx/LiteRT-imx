@@ -1,0 +1,114 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2026-06-02T02:55:15Z",
+    "creators": [
+      "Organization: NXP"
+    ],
+    "licenseListVersion": "3.26"
+  },
+  "name": "litert-imx-lf-6.18.20-2.0.0",
+  "dataLicense": "CC0-1.0",
+  "documentNamespace": "https://nxp.com/spdx/dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2",
+      "name": "litert-imx",
+      "versionInfo": "lf-6.18.20-2.0.0",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "downloadLocation": "https://github.com/nxp-imx/litert-imx -b lf-6.18.20-2.0.0",
+      "originator": "Organization: NXP",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---74557169-eb2c-4368-b9c1-1a9241acb45a",
+      "name": "@litertjs/model-tester",
+      "versionInfo": "2.0.0",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "homepage": "https://github.com/google-ai-edge/LiteRT#readme",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: @litertjs",
+      "supplier": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "OTHER",
+          "referenceLocator": "1d2f150d-4b8b-4769-a471-653082065074",
+          "referenceType": "BlackDuck-ComponentOrigin"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40litertjs/model-tester@2.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---46ee3237-d0ac-4cfa-8ddb-01ee5e4623ce",
+      "name": "google-ai-edge/LiteRT",
+      "versionInfo": "v1.2.0",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: google-ai-edge/LiteRT",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---91b4916e-1787-4496-a551-4ba1bc4c1d98",
+      "name": "google-ai-edge/LiteRT",
+      "versionInfo": "v2.1.0",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: google-ai-edge",
+      "supplier": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "OTHER",
+          "referenceLocator": "722ae5f7-1d6a-4af4-8e0b-96960b001fc2",
+          "referenceType": "BlackDuck-ComponentOrigin"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:github/google-ai-edge/litert@v2.1.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---46ee3237-d0ac-4cfa-8ddb-01ee5e4623ce"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2",
+      "relationshipType": "DYNAMIC_LINK",
+      "relatedSpdxElement": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---74557169-eb2c-4368-b9c1-1a9241acb45a"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---91b4916e-1787-4496-a551-4ba1bc4c1d98"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2",
+      "relationshipType": "DYNAMIC_LINK",
+      "relatedSpdxElement": "SPDXRef-package-dd50e4ae-8e0f-4228-8aba-e8ac85d7c3d2---91b4916e-1787-4496-a551-4ba1bc4c1d98"
+    }
+  ]
+}
